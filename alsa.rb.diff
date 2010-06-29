@@ -1,0 +1,22 @@
+39c39,44
+<     extend DL::Importer
+---
+>     case RUBY_VERSION.to_f
+>       when 1.8
+>        extend DL::Importable
+>       when 1.9
+>        extend DL::Importer
+>     end
+49c54,59
+<     @output = DL::CPtr.new(DL.malloc(DL::TYPE_VOID))
+---
+>     case RUBY_VERSION.to_f
+>       when 1.8
+>        @output = DL::PtrData.new(nil)
+>       when 1.9
+>        @output = DL::CPtr.new(DL::malloc(DL::TYPE_VOID))
+>     end
+59c69
+<     bytes = args.pack(format)
+---
+>     bytes = args.pack(format).to_ptr

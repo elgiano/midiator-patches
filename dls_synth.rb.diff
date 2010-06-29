@@ -1,0 +1,26 @@
+33c33,38
+<     extend DL::Importable 
+---
+>     case RUBY_VERSION.to_f
+>       when 1.8
+>        @client = DL::PtrData.new(nil)
+>       when 1.9
+>        @client = DL::CPtr.new(DL::malloc(DL::TYPE_VOID))
+>     end
+75,78c80,90
+<     @synth = DL::PtrData.new(nil) 
+<     @graph = DL::PtrData.new(nil)
+<     synthNode = DL::PtrData.new(nil)
+<     outNode = DL::PtrData.new(nil)
+---
+>     case RUBY_VERSION.to_f
+>       when 1.8
+>         @synth = DL::PtrData.new(nil) 
+>         @graph = DL::PtrData.new(nil)
+>         synthNode = DL::PtrData.new(nil)
+>         outNode = DL::PtrData.new(nil)
+>       when 1.9
+>         @synth = DL::CPtr.new(DL::malloc(DL::TYPE_VOID))
+>         @graph = DL::CPtr.new(DL::malloc(DL::TYPE_VOID))
+>         synthNode = DL::CPtr.new(DL::malloc(DL::TYPE_VOID))
+>         outNode = DL::CPtr.new(DL::malloc(DL::TYPE_VOID))

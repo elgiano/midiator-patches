@@ -1,0 +1,36 @@
+29c29,34
+<     extend DL::Importable
+---
+>     case RUBY_VERSION.to_f
+>       when 1.8
+>        extend DL::Importable
+>       when 1.9
+>        extend DL::Importer
+>     end
+43c48,53
+<     extend DL::Importable
+---
+>     case RUBY_VERSION.to_f
+>       when 1.8
+>        extend DL::Importable
+>       when 1.9
+>        extend DL::Importer
+>     end
+55c65,70
+<     @client = DL::PtrData.new( nil )
+---
+>     case RUBY_VERSION.to_f
+>       when 1.8
+>        @client = DL::PtrData.new(nil)
+>       when 1.9
+>        @client = DL::CPtr.new(DL::malloc(DL::TYPE_VOID))
+>     end
+59c74,79
+<     @outport = DL::PtrData.new( nil )
+---
+>     case RUBY_VERSION.to_f
+>       when 1.8
+>        @outport = DL::PtrData.new(nil)
+>       when 1.9
+>        @outport = DL::CPtr.new(DL::malloc(DL::TYPE_VOID))
+>     end

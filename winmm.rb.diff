@@ -1,0 +1,9 @@
+28c28,33
+<     extend DL::Importable
+---
+>     case RUBY_VERSION.to_f
+>       when 1.8
+>        extend DL::Importable
+>       when 1.9
+>        extend DL::Importer
+>     end
