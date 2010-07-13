@@ -1,0 +1,4 @@
+44a45,47
+> 
+> # ALSA reading patch
+> require 'midiator/reading'
