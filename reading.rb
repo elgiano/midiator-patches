@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 #
 # Add reading capabilities to MIDIator::Interface. Fork a new reading process by 
-# calling +start_reading+ and passing a callback process as argument.
+# calling +start_listening+ and passing a callback process as argument.
 #
 # == Author
 #
@@ -13,16 +13,32 @@ require 'midiator'
 
 class MIDIator::Interface
   attr_reader :read_data
-  # Start reading MIDI inputs and call +callback+ whenever new data is avaliable ( as +read_data+ )
+  # Start listening for MIDI inputs and call +callback+ whenever new data is avaliable ( as +read_data+ )
   def start_listening(callback)
     if callback
-      fork{while 1 do @read_data = read();callback.call end}
+      # Thread waiting for data to be available
+      Thread.new{
+      # Fork a new process to read data
+      rd,wr = IO.pipe
+      if cpid = fork
+        wr.close
+        at_exit{Process.kill "KILL",cpid}
+        loop do
+        IO.select([rd])
+        @read_data = rd.gets.unpack("CCC")
+        callback.call
+        end
+      else
+        rd.close
+        loop do wr.puts read end
+      end
+      }
     end
   end
   # Read MIDI inputs. Implemented only for ALSA drivers
   def read
-    @bytes = @driver.read
-    return @bytes.to_s(3).unpack("CCC")
+    @bytes = @driver.read.to_s(3)
+    return @bytes.to_s#.unpack("CCC")
   end
 end
 
