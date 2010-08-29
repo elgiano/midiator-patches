@@ -1,5 +1,5 @@
 39c39,44
-<     extend DL::Importer
+<     extend DL::Importable
 ---
 >     case RUBY_VERSION.to_f
 >       when 1.8
@@ -8,7 +8,7 @@
 >        extend DL::Importer
 >     end
 49c54,59
-<     @output = DL::CPtr.new(DL.malloc(DL::TYPE_VOID))
+<     @output = DL::PtrData.new(nil)
 ---
 >     case RUBY_VERSION.to_f
 >       when 1.8

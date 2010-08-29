@@ -7,3 +7,12 @@
 >       when 1.9
 >        extend DL::Importer
 >     end
+37c42,47
+<     @device = DL.malloc(DL.sizeof('I'))
+---
+>     case RUBY_VERSION.to_f
+>       when 1.8
+>        @device = DL.malloc(DL.sizeof('I'))
+>       when 1.9
+>        @device = DL.malloc(DL::Importer.sizeof('int'))
+>     end
