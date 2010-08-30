@@ -14,5 +14,5 @@
 >       when 1.8
 >        @device = DL.malloc(DL.sizeof('I'))
 >       when 1.9
->        @device = DL.malloc(DL::Importer.sizeof('int'))
+>        @device = DL::CPtr.new(DL.malloc(DL::SIZEOF_INT),DL::SIZEOF_INT)
 >     end
