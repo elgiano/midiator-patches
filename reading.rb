@@ -58,6 +58,12 @@ class MIDIator::Driver::ALSA < MIDIator::Driver
   end
   
   def read()
+    case RUBY_VERSION.to_f
+       when 1.8
+        @input = DL::PtrData.new(nil)
+       when 1.9
+        @input = DL::CPtr.new(DL::malloc(DL::TYPE_VOID))
+    end
     bytes = [999,999,999].pack("CCC").to_ptr
     C.snd_rawmidi_read(@input,bytes,3)
     C.snd_rawmidi_drain(@input)
