@@ -7,16 +7,29 @@
 >       when 1.9
 >        extend DL::Importer
 >     end
-49c54,59
+45a51,52
+>     
+>     extern "int snd_rawmidi_read(void*, void*, int)"
+49,50c56,64
 <     @output = DL::PtrData.new(nil)
+<     C.snd_rawmidi_open(nil, @output.ref, "virtual", 0)
 ---
 >     case RUBY_VERSION.to_f
 >       when 1.8
 >        @output = DL::PtrData.new(nil)
+>        @input = DL::PtrData.new(nil)
 >       when 1.9
 >        @output = DL::CPtr.new(DL::malloc(DL::TYPE_VOID))
+>        @input = DL::CPtr.new(DL::malloc(DL::TYPE_VOID))
 >     end
-59c69
-<     bytes = args.pack(format)
----
->     bytes = args.pack(format).to_ptr
+>     C.snd_rawmidi_open(@input.ref, @output.ref, "virtual", 0)
+54a69
+>     C.snd_rawmidi_close(@input)
+61a77,83
+>   end
+>   
+>   def read
+>     bytes = [999,999,999].pack("CCC").to_ptr
+>     C.snd_rawmidi_read(@input,bytes,3)
+>     C.snd_rawmidi_drain(@input)
+>     return bytes
