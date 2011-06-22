@@ -56,7 +56,17 @@ class MIDIator::Driver::ALSA < MIDIator::Driver
     dlload 'libasound.so'
     extern "int snd_rawmidi_read(void*, void*, int)"
   end
-  
+  def open
+    case RUBY_VERSION.to_f
+      when 1.8
+       @output = DL::PtrData.new(nil)
+       @input = DL::PtrData.new(nil)
+      when 1.9
+       @output = DL::CPtr.new(DL::malloc(DL::TYPE_VOID))
+       @input = DL::CPtr.new(DL::malloc(DL::TYPE_VOID))
+    end
+    C.snd_rawmidi_open(@input.ref, @output.ref, "virtual", 0)
+  end
   def read()
     case RUBY_VERSION.to_f
        when 1.8
