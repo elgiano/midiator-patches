@@ -1,0 +1,36 @@
+100a101,135
+>   ###########
+>   # READING #
+>   ###########
+>   # Start listening for MIDI inputs and call +callback+ whenever new data is avaliable ( as +read_data+ )
+>   def start_listening(callback)
+>     if callback
+>       # Thread waiting for data to be available
+>       Thread.abort_on_exception = true
+>       Thread.new{
+>       # Fork a new process to read data
+>       rd,wr = IO.pipe
+>       if cpid = fork
+>         wr.close
+>         at_exit{Process.kill "KILL",cpid}
+>         loop do
+>         IO.select([rd])
+>         @read_data = rd.gets
+>         next if not @read_data
+>         @read_data.force_encoding("internal") if RUBY_VERSION.to_f == 1.9
+>         @read_data = @read_data.gsub(/\\n/,"\n").unpack("CCC") # unescape \\n
+>         callback.call @read_data
+>         end
+>       else
+>         rd.close
+>         loop do wr.puts read.gsub(/\n/,"\\\\n") end # escape \n
+>       end
+>       }
+>     end
+>   end
+>   # Read MIDI inputs. Implemented only for ALSA drivers
+>   def read
+>     bytes = @driver.read
+>     return bytes.to_s
+>   end
+> 
