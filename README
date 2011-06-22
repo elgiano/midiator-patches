@@ -1,4 +1,5 @@
 Patches to MIDIator driver classes to achieve compatibility with both ruby 1.8 and 1.9
 
-A patch to achieve MIDI event receiving has been added. It has only been implemented for ALSA drivers though. To try it out copy 'reading.rb' in your 'lib/midiator/' folder and patch 'midiator.rb' to include it.
+A patch to achieve MIDI event receiving has been added. It has only been implemented for ALSA drivers though. Reading functions are included, for the driver part, in the alsa.rb.diff patch. The inteface part is in the interface.rb.diff patch.
 The current implementation works spawning a child process to read data, which communicate with the parent one through a pipe. The child is killed 'at_exit'.
+
